@@ -20,7 +20,7 @@ export const mockUsers: User[] = [
       genderPreference: ["male"],
       ageMin: 20,
       ageMax: 28,
-      maxDistanceMeters: 100,
+      maxDistanceMeters: 50,
     },
 
     lastLocationUpdatedAt: new Date().toISOString(),
@@ -45,7 +45,7 @@ export const mockUsers: User[] = [
       genderPreference: ["female"],
       ageMin: 20,
       ageMax: 28,
-      maxDistanceMeters: 100,
+      maxDistanceMeters: 50,
     },
 
     lastLocationUpdatedAt: new Date().toISOString(),
