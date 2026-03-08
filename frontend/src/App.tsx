@@ -1,10 +1,12 @@
-import { Routes, Route, Outlet } from 'react-router-dom'
-import './App.css'
-import NavBar from './components/NavBar/NavBar'
-import Dashboard from './pages/Dashboard/Dashboard'
-import UserProfilePage from './pages/Profile/UserProfilePage'
-import EditProfilePage from "./pages/EditProfile/EditProfilePage";
+import { Routes, Route, Outlet, Navigate } from "react-router-dom";
+import "./App.css";
 
+import NavBar from "./components/NavBar/NavBar";
+
+import LoginPage from "./pages/Login/Login"; 
+import Dashboard from "./pages/Dashboard/Dashboard";
+import UserProfilePage from "./pages/Profile/UserProfilePage";
+import EditProfilePage from "./pages/EditProfile/EditProfilePage";
 
 function AppLayout() {
   return (
@@ -12,19 +14,28 @@ function AppLayout() {
       <Outlet />
       <NavBar />
     </>
-  )
+  );
 }
 
 function App() {
   return (
     <Routes>
+
+      {/* Login page FIRST */}
+      <Route path="/login" element={<LoginPage />} />
+
+      {/* Redirect root to login */}
+      <Route path="/" element={<Navigate to="/login" replace />} />
+
+      {/* Main app pages */}
       <Route element={<AppLayout />}>
-        <Route index element={<Dashboard />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<UserProfilePage />} />
         <Route path="/edit-profile" element={<EditProfilePage />} />
       </Route>
+
     </Routes>
-  )
+  );
 }
 
-export default App
+export default App;
