@@ -6,6 +6,7 @@ type LoginResponse = {
   message?: string;
   user?: {
     id: string;
+    _id?: string;
     username: string;
     email: string;
     age?: number;
@@ -38,12 +39,61 @@ const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const existingUser = localStorage.getItem("user");
+    const existingUser = sessionStorage.getItem("user");
 
     if (existingUser) {
       navigate("/dashboard", { replace: true });
     }
   }, [navigate]);
+
+  const pushInitialLocation = async (userId: string) => {
+    if (!navigator.geolocation) {
+      console.log("Geolocation is not supported by this browser.");
+      return;
+    }
+
+    return new Promise<void>((resolve) => {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          console.log("Initial login location:", { latitude, longitude });
+
+          try {
+            const response = await fetch("http://localhost:3000/api/location/update", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                userId,
+                latitude,
+                longitude,
+              }),
+            });
+
+            const rawText = await response.text();
+            console.log("Initial location update status:", response.status);
+            console.log("Initial location update response:", rawText);
+          } catch (err) {
+            console.error("Initial location update failed:", err);
+          } finally {
+            resolve();
+          }
+        },
+        (geoError) => {
+          console.error("Geolocation error on login:", geoError);
+          resolve();
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
+        }
+      );
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,8 +113,8 @@ const LoginPage: React.FC = () => {
       });
 
       const rawText = await response.text();
-      console.log("Status:", response.status);
-      console.log("Raw server response:", rawText);
+      console.log("Login status:", response.status);
+      console.log("Login raw response:", rawText);
 
       let data: LoginResponse = {};
 
@@ -85,7 +135,14 @@ const LoginPage: React.FC = () => {
         return;
       }
 
-      localStorage.setItem("user", JSON.stringify(data.user));
+      sessionStorage.setItem("user", JSON.stringify(data.user));
+
+      const userId = data.user.id || data.user._id;
+
+      if (userId) {
+        await pushInitialLocation(userId);
+      }
+
       navigate("/dashboard", { replace: true });
     } catch (err) {
       console.error("Login error:", err);
