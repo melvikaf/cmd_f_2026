@@ -4,7 +4,7 @@ export async function updateUserLocation(
   userId: string,
   coordinates: [number, number]
 ): Promise<void> {
-  const user = mockUsers.find((u: { _id: string; }) => u._id === userId);
+  const user = mockUsers.find((u) => u._id === userId);
 
   if (!user) {
     throw new Error(`User ${userId} not found`);
@@ -16,4 +16,6 @@ export async function updateUserLocation(
   };
 
   user.lastLocationUpdatedAt = new Date().toISOString();
+
+  console.log(`Updated ${user.username} location to:`, coordinates);
 }

@@ -8,24 +8,19 @@ export const mockUsers: User[] = [
     age: 22,
     bio: "Coffee lover and sunset walks.",
     photoUrl: "https://randomuser.me/api/portraits/women/44.jpg",
-
     location: {
       type: "Point",
-      coordinates: [-123.1207, 49.2827],
+      coordinates: [0, 0], // placeholder, replaced by browser location
     },
-
     locationEnabled: true,
-
     preferences: {
       genderPreference: ["male"],
       ageMin: 20,
       ageMax: 28,
       maxDistanceMeters: 50,
     },
-
     lastLocationUpdatedAt: new Date().toISOString(),
   },
-
   {
     _id: "userB",
     username: "Ben",
@@ -33,21 +28,17 @@ export const mockUsers: User[] = [
     age: 23,
     bio: "Music, hiking, and good food.",
     photoUrl: "https://randomuser.me/api/portraits/men/45.jpg",
-
     location: {
       type: "Point",
-      coordinates: [-123.1208, 49.2828],
+      coordinates: [0, 0], // placeholder, replaced by browser location
     },
-
     locationEnabled: true,
-
     preferences: {
       genderPreference: ["female"],
       ageMin: 20,
       ageMax: 28,
       maxDistanceMeters: 50,
     },
-
     lastLocationUpdatedAt: new Date().toISOString(),
   },
 ];
