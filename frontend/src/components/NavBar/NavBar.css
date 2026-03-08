@@ -27,7 +27,7 @@
     align-items: center;
 }
 
-/* Individual button */
+/* Individual nav link (NavLink renders <a>) */
 .navbar__item {
     display: flex;
     flex-direction: column;
@@ -37,6 +37,7 @@
     border: none;
     background: none;
     cursor: pointer;
+    text-decoration: none;
 
     padding: 8px 12px;
 
