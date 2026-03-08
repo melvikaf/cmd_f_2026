@@ -1,51 +1,32 @@
 import React from "react";
-import {
-    Heart,
-    MessageCircle,
-    User,
-    Settings,
-    HelpCircle,
-} from "lucide-react";
+import { NavLink } from "react-router-dom";
+import { Heart, User, MapPinned } from "lucide-react";
 import "./NavBar.css";
 
-type NavItem = {
-    label: string;
-    icon: React.ReactNode;
-    active?: boolean;
-};
-
-const navItems: NavItem[] = [
-    {
-        label: "Discover",
-        icon: <Heart size={34} strokeWidth={2.2} />,
-        active: true,
-    },
-    {
-        label: "Profile",
-        icon: <User size={34} strokeWidth={2.2} />,
-    },
-    {
-        label: "Preferences",
-        icon: <Settings size={34} strokeWidth={2.2} />,
-    },
-];
+const navItems = [
+    { label: "Discover", path: "/", icon: <Heart size={34} strokeWidth={2.2} /> },
+    { label: "Profile", path: "/profile", icon: <User size={34} strokeWidth={2.2} /> },
+    { label: "Your Matches", path: "/preferences", icon: <MapPinned size={34} strokeWidth={2.2} /> },
+] as const;
 
 const NavBar: React.FC = () => {
     return (
         <nav className="navbar">
             <div className="navbar__items">
-                {navItems.map((item) => (
-                    <button
-                        key={item.label}
-                        className={`navbar__item ${item.active ? "active" : ""}`}
-                        type="button"
+                {navItems.map(({ label, path, icon }) => (
+                    <NavLink
+                        key={label}
+                        to={path}
+                        className={({ isActive }) =>
+                            `navbar__item ${isActive ? "active" : ""}`
+                        }
+                        end={path === "/"}
                     >
-                        <span className="navbar__icon">{item.icon}</span>
-                        <span className="navbar__label">{item.label}</span>
-                    </button>
+                        <span className="navbar__icon">{icon}</span>
+                        <span className="navbar__label">{label}</span>
+                    </NavLink>
                 ))}
             </div>
-
         </nav>
     );
 };
