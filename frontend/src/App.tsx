@@ -6,6 +6,7 @@ import NavBar from "./components/NavBar/NavBar";
 import LoginPage from "./pages/Login/Login"; 
 import Dashboard from "./pages/Dashboard/Dashboard";
 import UserProfilePage from "./pages/Profile/UserProfilePage";
+import MatchMap from './pages/MatchMap/MatchMap'
 import EditProfilePage from "./pages/EditProfile/EditProfilePage";
 
 function AppLayout() {
@@ -32,6 +33,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<UserProfilePage />} />
         <Route path="/edit-profile" element={<EditProfilePage />} />
+        <Route path="/match" element={<MatchMap />} />
       </Route>
 
     </Routes>
