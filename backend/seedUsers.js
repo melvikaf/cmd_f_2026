@@ -8,6 +8,7 @@ const User = require("./models/User");
 
 const USER_COUNT = 15;
 const DEFAULT_PASSWORD = "seedPassword123!";
+const USER_ID_START = 1234;
 const seedFilePath = path.join(__dirname, "seedUsers.json");
 
 const generateCoordinate = (min, max) =>
@@ -19,7 +20,23 @@ const pickGenderPreference = () => {
   return faker.helpers.arrayElements(options, count);
 };
 
+const buildPingHistory = (userId) => {
+  const now = new Date();
+  return Array.from({ length: 3 }, (_, index) => {
+    const timestamp = new Date(
+      now.getTime() - (3 - index) * faker.number.int({ min: 60, max: 300 }) * 60000
+    );
+
+    return [
+      userId + faker.number.int({ min: -15, max: 15 }),
+      timestamp.toISOString(),
+      [generateCoordinate(-123.25, -123.0), generateCoordinate(49.2, 49.35)],
+    ];
+  });
+};
+
 const buildFakeUser = (index, passwordHash) => {
+  const userId = USER_ID_START + index;
   const firstName = faker.person.firstName().toLowerCase();
   const lastName = faker.person.lastName().toLowerCase();
   const uniqueSuffix = `${index + 1}${faker.number.int({ min: 100, max: 999 })}`;
@@ -29,12 +46,15 @@ const buildFakeUser = (index, passwordHash) => {
   const ageMax = age + faker.number.int({ min: 2, max: 6 });
 
   return {
+    user_id: userId,
     username,
     email: `${username}@example.com`,
     passwordHash,
     profilePhoto: faker.image.avatar(),
     age,
     bio: faker.lorem.sentence(),
+    Ping: buildPingHistory(userId),
+    "Hide Profile": false,
     location: {
       type: "Point",
       coordinates: [

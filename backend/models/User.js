@@ -2,6 +2,13 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
+    user_id: {
+      type: Number,
+      unique: true,
+      index: true,
+      sparse: true,
+    },
+
     username: {
       type: String,
       required: true,
@@ -35,6 +42,16 @@ const userSchema = new mongoose.Schema(
     bio: {
       type: String,
       default: "",
+    },
+
+    Ping: {
+      type: [[mongoose.Schema.Types.Mixed]],
+      default: [],
+    },
+
+    "Hide Profile": {
+      type: Boolean,
+      default: false,
     },
 
     location: {
