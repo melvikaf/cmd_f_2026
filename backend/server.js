@@ -1,30 +1,32 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 require("dotenv").config();
 
-require("./models/User");
 const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
-// Middleware
+app.use(cors());
 app.use(express.json());
 
-// Test route
 app.get("/", (req, res) => {
-  res.send("LoveSignal API is running");
+  res.json({ message: "LoveSignal API is running" });
 });
-
 
 app.use("/api/auth", authRoutes);
 
-// Connect to MongoDB, then start server
+const PORT = process.env.PORT || 3000;
+const MONGO_URI = process.env.MONGO_URI;
+
+console.log("PORT:", PORT);
+console.log("MONGO_URI loaded:", !!MONGO_URI);
+
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(MONGO_URI)
   .then(() => {
     console.log("Connected to MongoDB");
 
-    const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
