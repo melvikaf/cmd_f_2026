@@ -4,33 +4,6 @@ export type BrowserLocation = {
   accuracy: number;
 };
 
-export function getCurrentBrowserLocation(): Promise<BrowserLocation> {
-  return new Promise((resolve, reject) => {
-    if (!navigator.geolocation) {
-      reject(new Error("Geolocation is not supported by this browser."));
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        resolve({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          accuracy: position.coords.accuracy,
-        });
-      },
-      (error) => {
-        reject(error);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0,
-      }
-    );
-  });
-}
-
 export function watchBrowserLocation(
   onSuccess: (location: BrowserLocation) => void,
   onError: (error: GeolocationPositionError) => void
@@ -61,5 +34,28 @@ export function watchBrowserLocation(
 export function stopWatchingBrowserLocation(watchId: number | null) {
   if (watchId !== null && navigator.geolocation) {
     navigator.geolocation.clearWatch(watchId);
+  }
+}
+
+export async function sendLocationToBackend(
+  userId: string,
+  location: BrowserLocation
+): Promise<void> {
+  const response = await fetch("/api/location/update", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      userId,
+      location: {
+        type: "Point",
+        coordinates: [location.longitude, location.latitude],
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update user location");
   }
 }
